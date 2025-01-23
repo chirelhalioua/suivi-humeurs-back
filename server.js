@@ -23,7 +23,7 @@ const app = express();
 
 // Configuration CORS
 const corsOptions = {
-  origin: ["http://localhost:3000"], // Frontend autorisé
+  origin: ["https://les-humeurs-a-la-funes.vercel.app/"], // Frontend autorisé
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // Autorise les cookies ou les headers d'authentification
 };
