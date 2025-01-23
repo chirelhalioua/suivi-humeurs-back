@@ -1,0 +1,22 @@
+# Ignore .env file
+.env
+
+# Ignore node_modules (dossier des dépendances Node.js)
+node_modules/
+
+# Ignore logs
+logs/
+*.log
+npm-debug.log*
+
+# Ignore build output
+/dist
+/build
+
+# Ignore IDE/Editor specific files (ajoutez-en si vous utilisez un IDE spécifique)
+.vscode/
+.idea/
+
+# Ignore OS-specific files (pour éviter les fichiers spécifiques à l'OS comme .DS_Store sur macOS)
+.DS_Store
+Thumbs.db
