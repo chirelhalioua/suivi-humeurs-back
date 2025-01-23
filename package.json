@@ -1,14 +1,13 @@
 {
   "name": "humeurs_funes_api",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "API pour l'application Humeurs Funès",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo 'Aucune étape de build définie'",
+    "start": "node server.js",
+    "test": "echo \"Erreur : aucun test spécifié\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -20,5 +19,10 @@
     "moment": "^2.30.1",
     "mongoose": "^8.9.4",
     "validator": "^13.12.0"
-  }
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "license": "ISC"
 }
