@@ -4,7 +4,7 @@
   "description": "API pour l'application Humeurs Funès",
   "main": "server.js",
   "scripts": {
-    "build": "echo 'Aucune étape de build définie'",
+    "build": "npm run build",
     "start": "node server.js",
     "test": "echo \"Erreur : aucun test spécifié\" && exit 1"
   },
