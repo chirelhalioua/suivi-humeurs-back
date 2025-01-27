@@ -22,12 +22,8 @@ if (!process.env.MONGODB_URI) {
 const app = express();
 
 // Configuration CORS
-const corsOptions = {
-  origin: ["https://les-humeurs-a-la-funes.vercel.app/"], // Frontend autorisé
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // Autorise les cookies ou les headers d'authentification
-};
-app.use(cors(corsOptions));
+const cors = require("cors");
+app.use(cors({ origin: "*" })); 
 
 // Middleware
 app.use(express.json()); // Pour analyser les requêtes en JSON
