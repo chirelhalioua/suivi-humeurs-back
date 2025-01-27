@@ -22,7 +22,6 @@ if (!process.env.MONGODB_URI) {
 const app = express();
 
 // Configuration CORS
-const cors = require("cors");
 app.use(cors({ origin: "*" })); 
 
 // Middleware
