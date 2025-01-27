@@ -8,7 +8,7 @@ const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
   // Vérification du format de l'email
-  if (!validator.isEmail(email)) {
+  if (typeof email !== 'string' || !validator.isEmail(email)) {
     return res.status(400).json({ message: 'Email invalide' });
   }
 
@@ -21,12 +21,11 @@ const registerUser = async (req, res) => {
     // Vérifier si l'utilisateur existe déjà
     const userExists = await User.findOne({ email });
     if (userExists) {
-      console.log(`Utilisateur avec l'email ${email} existe déjà.`);
-      return res.status(400).json({ message: 'Utilisateur déjà existant' });
+      return res.status(400).json({ message: `L'email ${email} est déjà utilisé` });
     }
 
     // Hacher le mot de passe
-const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     console.log(`Mot de passe haché : ${hashedPassword}`);
 
     // Créer un nouvel utilisateur
@@ -65,6 +64,10 @@ const loginUser = async (req, res) => {
   // Valider que l'email est bien une chaîne de caractères
   if (typeof email !== 'string') {
     return res.status(400).json({ message: 'L\'email doit être une chaîne de caractères' });
+  }
+
+  if (typeof password !== 'string' || password.length < 6) {
+    return res.status(400).json({ message: 'Le mot de passe est invalide ou trop court' });
   }
 
   try {
@@ -142,7 +145,6 @@ const deleteUserProfile = async (req, res) => {
     res.status(500).json({ error: 'Erreur serveur. Impossible de supprimer le profil.' });
   }
 };
-
 
 // Exporter toutes les fonctions nécessaires
 module.exports = { 
