@@ -59,35 +59,32 @@ const hashedPassword = await bcrypt.hash(password, 10);
 };
 
 // Connexion
-const axios = require('axios');  // Ajoute l'importation d'axios
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
 
-const loginUser = async (email, password) => {  // Passer les paramètres ici
   try {
-    const response = await axios.post('https://suivi-humeurs-back.onrender.com/api/auth/login', {
-      email,
-      password,
-    });
-
-    const { token } = response.data;
-
-    if (!token) {
-      throw new Error("Aucun token reçu");
+    // Chercher l'utilisateur par email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Utilisateur non trouvé' });
     }
 
-    localStorage.setItem('authToken', token); // Sauvegarder le token
+    // Comparer les mots de passe
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Mot de passe incorrect' });
+    }
 
-    message.value = 'Connexion réussie';
-    messageClass.value = 'success';
+    // Créer un token JWT
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    router.push('/profil'); // Rediriger vers la page de profil
+    // Répondre avec le token et les infos utilisateur
+    res.status(200).json({ token, user });
   } catch (error) {
-    console.error(error);
-
-    message.value = error.response?.data?.message || 'Erreur de connexion';
-    messageClass.value = 'error';
+    console.error('Erreur lors de la connexion:', error);
+    res.status(500).json({ message: 'Erreur serveur lors de la connexion' });
   }
 };
-
 
 // Récupérer tous les utilisateurs
 const getAllUsers = async (req, res) => {
