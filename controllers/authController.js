@@ -63,19 +63,20 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Vérifier si l'utilisateur existe
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Utilisateur non trouvé' });
     }
 
-    // Comparer les mots de passe
-    const isMatch = await user.matchPassword(password);  // Utilisation correcte de la méthode matchPassword
+    console.log("Utilisateur trouvé :", user);  // Vérifie l'utilisateur récupéré
+
+    const isMatch = await user.matchPassword(password);
+    console.log("Mot de passe valide ?", isMatch);  // Vérifie si les mots de passe correspondent
+
     if (!isMatch) {
       return res.status(400).json({ message: 'Mot de passe incorrect' });
     }
 
-    // Créer un token JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ token, user });
@@ -84,6 +85,7 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: 'Erreur du serveur' });
   }
 };
+
 
 
 // Récupérer tous les utilisateurs
