@@ -25,13 +25,13 @@ const app = express();
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
-      ? ["https://les-humeurs-a-la-funes.vercel.app/"] 
+      ? ["https://les-humeurs-a-la-funes.vercel.app"]
       : "*", 
-  methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes HTTP autorisées
-  allowedHeaders: ["Content-Type", "Authorization"], // Headers autorisés
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.use(cors(corsOptions)); // Appliquer les options CORS
+app.use(cors(corsOptions)); // Appliquer CORS
 
 // Middleware pour analyser les requêtes
 app.use(express.json()); // Analyse les requêtes avec un payload JSON
