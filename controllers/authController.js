@@ -59,11 +59,13 @@ const hashedPassword = await bcrypt.hash(password, 10);
 };
 
 // Connexion
-const loginUser = async () => {
+const axios = require('axios');  // Ajoute l'importation d'axios
+
+const loginUser = async (email, password) => {  // Passer les paramètres ici
   try {
-    const response = await axios.post('https://les-humeurs-a-la-funes.vercel.app/api/auth/login', {
-      email: email.value,
-      password: password.value,
+    const response = await axios.post('https://suivi-humeurs-back.onrender.com/api/auth/login', {
+      email,
+      password,
     });
 
     const { token } = response.data;
@@ -73,10 +75,6 @@ const loginUser = async () => {
     }
 
     localStorage.setItem('authToken', token); // Sauvegarder le token
-
-    // Vérifiez si le token est bien enregistré
-    const savedToken = localStorage.getItem('authToken');
-    console.log('Token enregistré:', savedToken); // Debug : affiche le token
 
     message.value = 'Connexion réussie';
     messageClass.value = 'success';
@@ -89,6 +87,7 @@ const loginUser = async () => {
     messageClass.value = 'error';
   }
 };
+
 
 // Récupérer tous les utilisateurs
 const getAllUsers = async (req, res) => {
