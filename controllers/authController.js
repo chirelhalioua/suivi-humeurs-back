@@ -58,7 +58,7 @@ const hashedPassword = await bcrypt.hash(password, 10);
   }
 };
 
-// Connexion d'un utilisateur
+// Connexion
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -70,7 +70,7 @@ const loginUser = async (req, res) => {
     }
 
     // Comparer les mots de passe
-    const isMatch = await user.matchPassword(password);
+    const isMatch = await user.matchPassword(password);  // Utilisation correcte de la méthode matchPassword
     if (!isMatch) {
       return res.status(400).json({ message: 'Mot de passe incorrect' });
     }
@@ -84,6 +84,7 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: 'Erreur du serveur' });
   }
 };
+
 
 // Récupérer tous les utilisateurs
 const getAllUsers = async (req, res) => {
