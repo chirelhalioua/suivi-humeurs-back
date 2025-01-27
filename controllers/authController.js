@@ -59,34 +59,36 @@ const hashedPassword = await bcrypt.hash(password, 10);
 };
 
 // Connexion
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+const loginUser = async () => {
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: 'Utilisateur non trouvé' });
+    const response = await axios.post('https://les-humeurs-a-la-funes.vercel.app/api/auth/login', {
+      email: email.value,
+      password: password.value,
+    });
+
+    const { token } = response.data;
+
+    if (!token) {
+      throw new Error("Aucun token reçu");
     }
 
-    console.log("Utilisateur trouvé :", user);  // Vérifie l'utilisateur récupéré
+    localStorage.setItem('authToken', token); // Sauvegarder le token
 
-    const isMatch = await user.matchPassword(password);
-    console.log("Mot de passe valide ?", isMatch);  // Vérifie si les mots de passe correspondent
+    // Vérifiez si le token est bien enregistré
+    const savedToken = localStorage.getItem('authToken');
+    console.log('Token enregistré:', savedToken); // Debug : affiche le token
 
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Mot de passe incorrect' });
-    }
+    message.value = 'Connexion réussie';
+    messageClass.value = 'success';
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    res.json({ token, user });
+    router.push('/profil'); // Rediriger vers la page de profil
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Erreur du serveur' });
+
+    message.value = error.response?.data?.message || 'Erreur de connexion';
+    messageClass.value = 'error';
   }
 };
-
-
 
 // Récupérer tous les utilisateurs
 const getAllUsers = async (req, res) => {
