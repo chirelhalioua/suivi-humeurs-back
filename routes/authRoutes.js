@@ -5,7 +5,11 @@ const authMiddleware = require('../middleware/authMiddleware'); // Importer le m
 const User = require('../models/User'); // Importer le modèle utilisateur
 
 // Inscription
-router.post('/register', registerUser);
+router.post('/register', (req, res) => {
+  console.log('Requête reçue sur /register');
+  registerUser(req, res);  // Appelle la fonction pour l'inscription
+});
+
 
 // Connexion
 router.post('/login', loginUser); // Corrigé pour éviter un double /api
