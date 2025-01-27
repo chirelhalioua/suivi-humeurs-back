@@ -62,27 +62,30 @@ const hashedPassword = await bcrypt.hash(password, 10);
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  // Valider que l'email est bien une chaîne de caractères
+  if (typeof email !== 'string') {
+    return res.status(400).json({ message: 'L\'email doit être une chaîne de caractères' });
+  }
+
   try {
-    // Chercher l'utilisateur par email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: 'Utilisateur non trouvé' });
+      return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
     }
 
-    // Comparer les mots de passe
+    // Comparer le mot de passe avec celui haché dans la base de données
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Mot de passe incorrect' });
+      return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
     }
 
     // Créer un token JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Répondre avec le token et les infos utilisateur
-    res.status(200).json({ token, user });
+    res.status(200).json({ token });
   } catch (error) {
-    console.error('Erreur lors de la connexion:', error);
-    res.status(500).json({ message: 'Erreur serveur lors de la connexion' });
+    console.error('Erreur lors de la connexion : ', error);
+    res.status(500).json({ message: 'Erreur du serveur' });
   }
 };
 
