@@ -1,31 +1,22 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User'); 
 
-const verifyToken = async (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+const authMiddleware = (req, res, next) => {
+  // Vérification du token dans les headers de la requête (Bearer token)
+  const token = req.header('Authorization')?.replace('Bearer ', ''); // Prend le token après "Bearer "
 
   if (!token) {
-    return res.status(401).json({ success: false, error: 'Aucun token fourni.' });
+    return res.status(401).json({ message: 'Accès non autorisé. Token manquant.' });
   }
 
   try {
-    // Décoder le token
+    // Décodage du token et ajout à `req.user` pour pouvoir l'utiliser dans les routes
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Récupérer l'utilisateur en fonction de l'ID contenu dans le token
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'Utilisateur non trouvé.' });
-    }
-
-    // Ajouter l'utilisateur à la requête pour les prochains middlewares/routes
-    req.user = user;
-    next();
+    req.user = decoded; // L'ID de l'utilisateur est stocké dans `req.user.id`
+    next(); // Passer à la suite du traitement
   } catch (error) {
-    console.error('Erreur lors de la vérification du token:', error);
-    return res.status(401).json({ success: false, error: 'Token invalide ou expiré.' });
+    return res.status(401).json({ message: 'Token invalide.' });
   }
 };
 
-module.exports = verifyToken;
+module.exports = authMiddleware;
