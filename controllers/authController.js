@@ -79,12 +79,14 @@ const getAllUsers = async (req, res) => {
 // Récupérer le profil de l'utilisateur connecté
 const getUserProfile = async (req, res) => {
   try {
-    const userId = req.user.id;  // Utiliser l'ID de l'utilisateur décodé du token
-    const user = await User.findById(userId).select('-password');
+    const userId = req.user.id; // L'ID de l'utilisateur est stocké dans req.user.id
+    const user = await User.findById(userId).select('-password'); // Récupère l'utilisateur sans le mot de passe
+
     if (!user) {
       return res.status(404).json({ message: 'Utilisateur non trouvé' });
     }
-    res.status(200).json({ user });
+
+    res.status(200).json({ user }); // Renvoie les informations de l'utilisateur
   } catch (error) {
     console.error('Erreur lors de la récupération du profil : ', error);
     res.status(500).json({ message: 'Erreur du serveur' });
