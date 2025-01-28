@@ -2,21 +2,19 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User'); 
 
 const authMiddleware = (req, res, next) => {
-  // Vérification du token dans les headers de la requête (Bearer token)
-  const token = req.header('Authorization')?.replace('Bearer ', ''); // Prend le token après "Bearer "
+    const token = req.headers['authorization']?.split(' ')[1]; // Récupère le token dans le header Authorization
 
-  if (!token) {
-    return res.status(401).json({ message: 'Accès non autorisé. Token manquant.' });
-  }
+    if (!token) {
+        return res.status(403).json({ message: 'Token manquant' });
+    }
 
-  try {
-    // Décodage du token et ajout à `req.user` pour pouvoir l'utiliser dans les routes
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // L'ID de l'utilisateur est stocké dans `req.user.id`
-    next(); // Passer à la suite du traitement
-  } catch (error) {
-    return res.status(401).json({ message: 'Token invalide.' });
-  }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Vérifie le token
+        req.userId = decoded.id; // Ajoute l'ID de l'utilisateur dans la requête
+        next(); // Continue la requête
+    } catch (error) {
+        return res.status(401).json({ message: 'Token invalide ou expiré' });
+    }
 };
 
 module.exports = authMiddleware;
