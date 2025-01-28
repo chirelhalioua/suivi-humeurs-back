@@ -8,7 +8,7 @@ const listEndpoints = require("express-list-endpoints");
 const humeursRoutes = require("./routes/humeursRoutes");
 const authRoutes = require("./routes/authRoutes");
 const humeursUserRoute = require("./routes/humeursUser");
-const authMiddleware = require("./middlewares/authMiddleware");  // Import du middleware d'authentification
+const authMiddleware = require("./middleware/authMiddleware");  // Import du middleware d'authentification
 const { getUserProfile } = require("./controllers/userController");  // Import du contrôleur pour obtenir le profil
 
 
