@@ -8,6 +8,9 @@ const listEndpoints = require("express-list-endpoints");
 const humeursRoutes = require("./routes/humeursRoutes");
 const authRoutes = require("./routes/authRoutes");
 const humeursUserRoute = require("./routes/humeursUser");
+const authMiddleware = require("./middlewares/authMiddleware");  // Import du middleware d'authentification
+const { getUserProfile } = require("./controllers/userController");  // Import du contrôleur pour obtenir le profil
+
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -59,6 +62,9 @@ app.use("/api/humeurs", humeursRoutes);
 // Liste des routes disponibles
 console.log("Routes disponibles :");
 console.table(listEndpoints(app)); // Affichage des routes sous forme de table pour plus de lisibilité
+
+// Route protégée pour obtenir le profil de l'utilisateur connecté
+app.get("/api/profil", authMiddleware, getUserProfile);
 
 // Middleware global pour gérer les erreurs
 app.use((err, req, res, next) => {
