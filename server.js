@@ -9,7 +9,7 @@ const humeursRoutes = require("./routes/humeursRoutes");
 const authRoutes = require("./routes/authRoutes");
 const humeursUserRoute = require("./routes/humeursUser");
 const authMiddleware = require("./middleware/authMiddleware");  // Import du middleware d'authentification
-const { getUserProfile } = require("./controllers/userController");  // Import du contrôleur pour obtenir le profil
+const { getUserProfile } = require("./controllers/authController");  // Import du contrôleur pour obtenir le profil
 
 
 // Charger les variables d'environnement
